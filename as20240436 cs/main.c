@@ -11,13 +11,16 @@ void renameCity(char cityNames[][30],int cityCount);
 void removeCity(char cityNames[][30],int *cityCount);
 void inputDistance(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]);
 void displayDistanceTable(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]);
+void showVehicles(char vehicleNames[][30],int vehicleCount);
 
 
 int main() {
     char cityNames[MAX_CITIES][30];
     int cityCount = 0;
-    int choice,choice1,choice2;
+    int choice,choice1,choice2,choice3;
     int distance[MAX_CITIES][MAX_CITIES];
+    char vehicleNames[MAX_CITIES][30] = {"Truck A","Van B","Lorry C"};
+    int vehicleCount = 3;
 
     for(int i=0; i< MAX_CITIES;i++){
         for(int j=0;j<MAX_CITIES; j++){
@@ -31,7 +34,8 @@ int main() {
         printf("\n===============================\n");
         printf("1. Manage cities\n");
         printf("2. Manage distance\n");
-        printf("3. Exit\n");
+        printf("3. manage vehicles\n");
+        printf("4. Exit\n");
 
 
         printf("enter your choice:");
@@ -113,8 +117,30 @@ int main() {
 
                 }while(choice2 !=3);
                 break;
+                    case 3:
+                        do{
+                            printf("------Vehicle Management------\n");
+                            printf("1. Show Vehicles\n");
+                            printf("2. Back to main menu \n");
 
-            case 3:
+                            printf("enter your choice:");
+                            scanf("%d",&choice3);
+
+                            switch(choice3){
+                            case 1:
+                                showVehicles(vehicleNames,vehicleCount);
+                                break;
+
+                            case 2:
+                                printf("return to main menu \n");
+                                break;
+                            default:
+                                printf("invalid choice\n");
+                            }
+                        }while(choice3 !=2);
+                        break;
+
+            case 4:
                 printf("Exiting program....\n");
                 break;
 
@@ -122,7 +148,7 @@ int main() {
 
                 printf("Invalid choice..\n");
         }
-        }while (choice != 3);
+        }while (choice != 4);
 
 
     return 0;
@@ -291,6 +317,25 @@ void displayDistanceTable(int distance[][MAX_CITIES], int cityCount, char cityNa
         printf("\n");
     }
     printf("---------------------------------\n");
+}
+
+void showVehicles(char vehicleNames[][30], int vehicleCount)
+{
+    if (vehicleCount == 0)
+        {
+        printf("No vehicles available.\n");
+        return;
+    }
+
+    printf("\n--- Vehicle List ---\n");
+    for (int i = 0; i < vehicleCount; i++)
+        {
+        printf("%d. %s\n", i + 1, vehicleNames[i]);
+    }
+
+    printf("---------------------\n");
+
+
 }
 
 
