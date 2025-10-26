@@ -429,14 +429,44 @@ void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30]
         return;
     }
 
-    strcpy(d.vehicle, vehicles[v - 1].name);
-    strcpy(d.status, "Pending");
+    Vehicle veh = vehicles[v - 1];
+    strcpy(d.vehicle, veh.name);
 
+    printf("Enter cargo weight (kg): ");
+    scanf("%lf", &d.weight);
+
+    if (d.weight > veh.capacity) {
+        printf("Weight exceeds vehicle capacity (%d kg)\n", veh.capacity);
+        return;
+
+   }
+   d.baseCost = d.distance * veh.ratePerKm * (1 + d.weight / 10000.0);
+    d.fuelUsed = d.distance / veh.efficiency;
+    d.fuelCost = d.fuelUsed * FUEL_PRICE;
+    d.operationalCost = d.baseCost + d.fuelCost;
+    d.profit = d.baseCost * 0.25;
+    d.totalCharge = d.operationalCost + d.profit;
+    d.timeHrs = d.distance / veh.speed;
+
+    strcpy(d.status, "Pending");
     deliveries[*deliveryCount] = d;
     (*deliveryCount)++;
 
-    printf("Delivery added successfully\n");
+    printf("\n======================================================\n");
+    printf("DELIVERY COST ESTIMATION\n");
+    printf("------------------------------------------------------\n");
+    printf("From: %s\nTo: %s\n", d.source, d.destination);
+    printf("Distance: %d km\nVehicle: %s\nWeight: %.2f kg\n", d.distance, d.vehicle, d.weight);
+    printf("------------------------------------------------------\n");
+    printf("Base Cost: %.2f LKR\nFuel Used: %.2f L\nFuel Cost: %.2f LKR\n", d.baseCost, d.fuelUsed, d.fuelCost);
+    printf("Operational Cost: %.2f LKR\nProfit: %.2f LKR\nCustomer Charge: %.2f LKR\n", d.operationalCost, d.profit, d.totalCharge);
+    printf("Estimated Time: %.2f hours\n", d.timeHrs);
+    printf("======================================================\n");
+
+
 }
+
+
 
 void showDeliveries(Delivery deliveries[], int deliveryCount)
 {
@@ -446,8 +476,12 @@ void showDeliveries(Delivery deliveries[], int deliveryCount)
     }
 
    printf("\n------ Delivery List ------\n");
+
+
 for (int i = 0; i < deliveryCount; i++) {
-    printf("ID: %d | From: %s -> To: %s | Vehicle: %s | Distance: %d km | Status: %s\n",deliveries[i].id, deliveries[i].source, deliveries[i].destination,deliveries[i].vehicle, deliveries[i].distance, deliveries[i].status);
+     printf("ID: %d | From: %s -> To: %s | Vehicle: %s | Distance: %d km | Charge: LKR %.2f | Status: %s\n",deliveries[i].id, deliveries[i].source, deliveries[i].destination,deliveries[i].vehicle, deliveries[i].distance, deliveries[i].totalCharge, deliveries[i].status);
+
+
 }
 printf("----------------------------\n");
 
