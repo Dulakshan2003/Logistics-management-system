@@ -3,6 +3,8 @@
 
 #define MAX_CITIES 30
 #define MAX_DELIVERIES 100
+#define FUEL_PRICE 310.0
+
 typedef struct {
     int id;
     char source[30];
@@ -18,6 +20,7 @@ typedef struct {
 char name[20];
 int capacity;
 double ratePerKm, speed, efficiency;
+
 } Vehicle;
 
 
@@ -380,12 +383,12 @@ printf("---------------------------------\n");
 void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30], int cityCount,Vehicle vehicles[], int vehicleCount, int distance[][MAX_CITIES])
 {
     if (cityCount < 2) {
-        printf("Add at least 2 cities first!\n");
+        printf("Add at least 2 cities first\n");
         return;
     }
 
     if (*deliveryCount >= MAX_DELIVERIES) {
-        printf("Cannot add more deliveries!\n");
+        printf("Cannot add more deliveries\n");
         return;
     }
 
@@ -444,9 +447,7 @@ void showDeliveries(Delivery deliveries[], int deliveryCount)
 
    printf("\n------ Delivery List ------\n");
 for (int i = 0; i < deliveryCount; i++) {
-    printf("ID: %d | From: %s -> To: %s | Vehicle: %s | Distance: %d km | Status: %s\n",
-           deliveries[i].id, deliveries[i].source, deliveries[i].destination,
-           deliveries[i].vehicle, deliveries[i].distance, deliveries[i].status);
+    printf("ID: %d | From: %s -> To: %s | Vehicle: %s | Distance: %d km | Status: %s\n",deliveries[i].id, deliveries[i].source, deliveries[i].destination,deliveries[i].vehicle, deliveries[i].distance, deliveries[i].status);
 }
 printf("----------------------------\n");
 
