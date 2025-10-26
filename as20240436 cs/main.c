@@ -2,7 +2,15 @@
 #include <string.h>
 
 #define MAX_CITIES 30
-
+#define MAX_DELIVERIES 100
+typedef struct {
+    int id;
+    char source[30];
+    char destination[30];
+    char vehicle[30];
+    int distance;
+    char status[20];
+} Delivery;
 
 
 void addCities(int maxCities ,char cityNames[][30], int *cityCount);
@@ -12,15 +20,18 @@ void removeCity(char cityNames[][30],int *cityCount);
 void inputDistance(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]);
 void displayDistanceTable(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]);
 void showVehicles(char vehicleNames[][30],int vehicleCount);
+void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30], int cityCount, char vehicleNames[][30], int vehicleCount, int distance[][MAX_CITIES]);
 
 
 int main() {
     char cityNames[MAX_CITIES][30];
     int cityCount = 0;
-    int choice,choice1,choice2,choice3;
+    int choice,choice1,choice2,choice3,choice4;
     int distance[MAX_CITIES][MAX_CITIES];
     char vehicleNames[MAX_CITIES][30] = {"Truck A","Van B","Lorry C"};
     int vehicleCount = 3;
+    Delivery deliveries[MAX_DELIVERIES];
+    int deliveryCount = 0;
 
     for(int i=0; i< MAX_CITIES;i++){
         for(int j=0;j<MAX_CITIES; j++){
@@ -35,7 +46,8 @@ int main() {
         printf("1. Manage cities\n");
         printf("2. Manage distance\n");
         printf("3. manage vehicles\n");
-        printf("4. Exit\n");
+        printf("4. manage deliveri\n");
+        printf("5. Exit\n");
 
 
         printf("enter your choice:");
@@ -139,8 +151,33 @@ int main() {
                             }
                         }while(choice3 !=2);
                         break;
+                            case 4:
+                                do{
+                                    printf("------ Delivery Management ------\n");
+                                    printf("1. Add Delivery\n");
+                                    printf("2. back to main menu\n");
 
-            case 4:
+                                printf("enter your choice:");
+                                scanf("%d",&choice4);
+
+                                switch (choice4){
+                                case 1:
+                                    addDelivery(deliveries, &deliveryCount, cityNames, cityCount, vehicleNames, vehicleCount, distance);
+                                    break;
+                                case 2:
+                                    printf("return main menu\n");
+                                    break;
+
+                                default:
+                                    printf("invalid choice");
+
+
+            }
+
+                }while (choice4  !=3);
+                break;
+
+            case 5:
                 printf("Exiting program....\n");
                 break;
 
@@ -148,7 +185,7 @@ int main() {
 
                 printf("Invalid choice..\n");
         }
-        }while (choice != 4);
+        }while (choice != 5);
 
 
     return 0;
@@ -337,6 +374,65 @@ void showVehicles(char vehicleNames[][30], int vehicleCount)
 
 
 }
+
+void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30], int cityCount, char vehicleNames[][30], int vehicleCount, int distance[][MAX_CITIES])
+{
+    if (cityCount < 2) {
+        printf("Add at least 2 cities first!\n");
+        return;
+    }
+
+    if (*deliveryCount >= MAX_DELIVERIES) {
+        printf("Cannot add more deliveries!\n");
+        return;
+    }
+
+    Delivery d;
+    d.id = *deliveryCount + 1;
+
+    printf("\n--- Add New Delivery ---\n");
+    displayCities(cityNames, cityCount);
+
+    printf("Enter source city number: ");
+    int s, dcity;
+    scanf("%d", &s);
+    printf("Enter destination city number: ");
+    scanf("%d", &dcity);
+
+    if (s < 1 || s > cityCount || dcity < 1 || dcity > cityCount || s == dcity) {
+        printf("Invalid city selection!\n");
+        return;
+    }
+
+    strcpy(d.source, cityNames[s - 1]);
+    strcpy(d.destination, cityNames[dcity - 1]);
+
+    displayDistanceTable(distance, cityCount, cityNames);
+
+    d.distance = distance[s - 1][dcity - 1];
+    if (d.distance <= 0) {
+        printf("Distance not recorded between selected cities.\n");
+        return;
+    }
+
+    showVehicles(vehicleNames, vehicleCount);
+    printf("Select vehicle number: ");
+    int v;
+    scanf("%d", &v);
+    if (v < 1 || v > vehicleCount) {
+        printf("Invalid vehicle selection!\n");
+        return;
+    }
+
+    strcpy(d.vehicle, vehicleNames[v - 1]);
+    strcpy(d.status, "Pending");
+
+    deliveries[*deliveryCount] = d;
+    (*deliveryCount)++;
+
+    printf("Delivery added successfully\n");
+}
+
 
 
 
