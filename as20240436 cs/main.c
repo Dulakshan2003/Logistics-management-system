@@ -10,7 +10,15 @@ typedef struct {
     char vehicle[30];
     int distance;
     char status[20];
+    double weight, baseCost, fuelUsed, fuelCost, operationalCost, profit, totalCharge, timeHrs;
+
 } Delivery;
+
+typedef struct {
+char name[20];
+int capacity;
+double ratePerKm, speed, efficiency;
+} Vehicle;
 
 
 void addCities(int maxCities ,char cityNames[][30], int *cityCount);
@@ -19,8 +27,8 @@ void renameCity(char cityNames[][30],int cityCount);
 void removeCity(char cityNames[][30],int *cityCount);
 void inputDistance(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]);
 void displayDistanceTable(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]);
-void showVehicles(char vehicleNames[][30],int vehicleCount);
-void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30], int cityCount, char vehicleNames[][30], int vehicleCount, int distance[][MAX_CITIES]);
+void showVehicles(Vehicle vehicles[],int vehicleCount);
+void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30], int cityCount, Vehicle vehicles[], int vehicleCount, int distance[][MAX_CITIES]);
 void showDeliveries(Delivery deliveries[], int deliveryCount);
 
 
@@ -29,7 +37,12 @@ int main() {
     int cityCount = 0;
     int choice,choice1,choice2,choice3,choice4;
     int distance[MAX_CITIES][MAX_CITIES];
-    char vehicleNames[MAX_CITIES][30] = {"Truck A","Van B","Lorry C"};
+    Vehicle vehicles[3]={
+        {"Truck",5000,40,50,6},
+        {"Van",1000,30,60,12},
+        {"Lorry",10000,80,45,4}
+    };
+
     int vehicleCount = 3;
     Delivery deliveries[MAX_DELIVERIES];
     int deliveryCount = 0;
@@ -131,27 +144,9 @@ int main() {
                 }while(choice2 !=3);
                 break;
                     case 3:
-                        do{
-                            printf("------Vehicle Management------\n");
-                            printf("1. Show Vehicles\n");
-                            printf("2. Back to main menu \n");
+                        showVehicles(vehicles, vehicleCount);
+                         break;
 
-                            printf("enter your choice:");
-                            scanf("%d",&choice3);
-
-                            switch(choice3){
-                            case 1:
-                                showVehicles(vehicleNames,vehicleCount);
-                                break;
-
-                            case 2:
-                                printf("return to main menu \n");
-                                break;
-                            default:
-                                printf("invalid choice\n");
-                            }
-                        }while(choice3 !=2);
-                        break;
                             case 4:
                                 do{
                                     printf("------ Delivery Management ------\n");
@@ -164,7 +159,7 @@ int main() {
 
                                 switch (choice4){
                                 case 1:
-                                    addDelivery(deliveries, &deliveryCount, cityNames, cityCount, vehicleNames, vehicleCount, distance);
+                                    addDelivery(deliveries, &deliveryCount, cityNames, cityCount, vehicles, vehicleCount, distance);
                                     break;
                                 case 2:
                                     showDeliveries(deliveries, deliveryCount);
@@ -362,7 +357,7 @@ void displayDistanceTable(int distance[][MAX_CITIES], int cityCount, char cityNa
     printf("---------------------------------\n");
 }
 
-void showVehicles(char vehicleNames[][30], int vehicleCount)
+void showVehicles(Vehicle vehicles[], int vehicleCount)
 {
     if (vehicleCount == 0)
         {
@@ -370,18 +365,19 @@ void showVehicles(char vehicleNames[][30], int vehicleCount)
         return;
     }
 
-    printf("\n--- Vehicle List ---\n");
-    for (int i = 0; i < vehicleCount; i++)
-        {
-        printf("%d. %s\n", i + 1, vehicleNames[i]);
-    }
+   printf("\n--- Vehicle List ---\n");
+printf("%-5s %-10s %-10s %-10s %-10s %-10s\n", "ID", "Type", "Cap(kg)", "Rate/km", "Speed", "FuelEff");
+for (int i = 0; i < vehicleCount; i++){
+    printf("%-5d %-10s %-10d %-10.2f %-10.2f %-10.2f\n", i+1, vehicles[i].name, vehicles[i].capacity,
+           vehicles[i].ratePerKm, vehicles[i].speed, vehicles[i].efficiency);
+}
+printf("---------------------------------\n");
 
-    printf("---------------------\n");
 
 
 }
 
-void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30], int cityCount, char vehicleNames[][30], int vehicleCount, int distance[][MAX_CITIES])
+void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30], int cityCount,Vehicle vehicles[], int vehicleCount, int distance[][MAX_CITIES])
 {
     if (cityCount < 2) {
         printf("Add at least 2 cities first!\n");
@@ -413,7 +409,7 @@ void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30]
     strcpy(d.source, cityNames[s - 1]);
     strcpy(d.destination, cityNames[dcity - 1]);
 
-    displayDistanceTable(distance, cityCount, cityNames);
+
 
     d.distance = distance[s - 1][dcity - 1];
     if (d.distance <= 0) {
@@ -421,7 +417,7 @@ void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30]
         return;
     }
 
-    showVehicles(vehicleNames, vehicleCount);
+    showVehicles(vehicles, vehicleCount);
     printf("Select vehicle number: ");
     int v;
     scanf("%d", &v);
@@ -430,7 +426,7 @@ void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30]
         return;
     }
 
-    strcpy(d.vehicle, vehicleNames[v - 1]);
+    strcpy(d.vehicle, vehicles[v - 1].name);
     strcpy(d.status, "Pending");
 
     deliveries[*deliveryCount] = d;
@@ -446,13 +442,14 @@ void showDeliveries(Delivery deliveries[], int deliveryCount)
         return;
     }
 
-    printf("\n------ Delivery List ------\n");
-    for (int i = 0; i < deliveryCount; i++) {
-        printf("ID: %d | From: %s -> To: %s | Vehicle: %s | Distance: %d km | Status: %s\n",deliveries[i].id, deliveries[i].source, deliveries[i].destination,deliveries[i].vehicle, deliveries[i].distance, deliveries[i].status);
+   printf("\n------ Delivery List ------\n");
+for (int i = 0; i < deliveryCount; i++) {
+    printf("ID: %d | From: %s -> To: %s | Vehicle: %s | Distance: %d km | Status: %s\n",
+           deliveries[i].id, deliveries[i].source, deliveries[i].destination,
+           deliveries[i].vehicle, deliveries[i].distance, deliveries[i].status);
+}
+printf("----------------------------\n");
 
-    }
-
-    printf("----------------------------\n");
 
 }
 
