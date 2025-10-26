@@ -10,6 +10,8 @@ void displayCities(char cityNames[][30], int cityCount);
 void renameCity(char cityNames[][30],int cityCount);
 void removeCity(char cityNames[][30],int *cityCount);
 void inputDistance(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]);
+void displayDistanceTable(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]);
+
 
 int main() {
     char cityNames[MAX_CITIES][30];
@@ -41,7 +43,7 @@ int main() {
 
     do {
 
-        printf("------ city Management ------");
+        printf("------ city Management ------\n");
 
         printf("1. Add City\n");
 
@@ -86,7 +88,10 @@ int main() {
                 do{
                 printf("------ Distance Management ------\n");
                 printf("1. Input/Edit Distance\n");
-                printf("2. Back to Main Menu\n");
+                printf("2. Display Distance Table\n");
+                printf("3. Back to Main Menu\n");
+
+
                 printf("Enter your choice: ");
                 scanf("%d", &choice2);
 
@@ -95,6 +100,9 @@ int main() {
                         inputDistance(distance, cityCount, cityNames);
                         break;
                     case 2:
+                        displayDistanceTable(distance,cityCount,cityNames);
+                        break;
+                    case 3:
                         printf("Returning to main menu...\n");
                         break;
                     default:
@@ -103,7 +111,7 @@ int main() {
 
 
 
-                }while(choice2 !=2);
+                }while(choice2 !=3);
                 break;
 
             case 3:
@@ -249,3 +257,41 @@ void inputDistance(int distance[][MAX_CITIES], int cityCount, char cityNames[][3
     printf("Distance recorded successfully!\n");
 
 }
+
+
+void displayDistanceTable(int distance[][MAX_CITIES], int cityCount, char cityNames[][30])
+{
+    if (cityCount < 2) {
+        printf("Not enough cities to display.\n");
+        return;
+    }
+
+    printf("\n------ Distance Table (km) ------\n      ");
+
+    for (int i = 0; i < cityCount; i++)
+        {
+        printf("%-10s", cityNames[i]);
+
+    }
+    printf("\n");
+
+    for (int i = 0; i < cityCount; i++)
+        {
+        printf("%-5s", cityNames[i]);
+        for (int j = 0; j < cityCount; j++)
+        {
+            if (distance[i][j] == -1)
+
+                printf("%-10s", "-");
+
+            else
+
+                printf("%-10d", distance[i][j]);
+}
+        printf("\n");
+    }
+    printf("---------------------------------\n");
+}
+
+
+
