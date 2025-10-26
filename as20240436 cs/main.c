@@ -21,6 +21,7 @@ void inputDistance(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]
 void displayDistanceTable(int distance[][MAX_CITIES],int cityCount,char cityNames[][30]);
 void showVehicles(char vehicleNames[][30],int vehicleCount);
 void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30], int cityCount, char vehicleNames[][30], int vehicleCount, int distance[][MAX_CITIES]);
+void showDeliveries(Delivery deliveries[], int deliveryCount);
 
 
 int main() {
@@ -155,7 +156,8 @@ int main() {
                                 do{
                                     printf("------ Delivery Management ------\n");
                                     printf("1. Add Delivery\n");
-                                    printf("2. back to main menu\n");
+                                    printf("2. show deliveries\n");
+                                    printf("3. back to main menu\n");
 
                                 printf("enter your choice:");
                                 scanf("%d",&choice4);
@@ -165,6 +167,10 @@ int main() {
                                     addDelivery(deliveries, &deliveryCount, cityNames, cityCount, vehicleNames, vehicleCount, distance);
                                     break;
                                 case 2:
+                                    showDeliveries(deliveries, deliveryCount);
+                                    break;
+
+                                case 3:
                                     printf("return main menu\n");
                                     break;
 
@@ -431,6 +437,23 @@ void addDelivery(Delivery deliveries[], int *deliveryCount, char cityNames[][30]
     (*deliveryCount)++;
 
     printf("Delivery added successfully\n");
+}
+
+void showDeliveries(Delivery deliveries[], int deliveryCount)
+{
+    if (deliveryCount == 0) {
+        printf("No deliveries found\n");
+        return;
+    }
+
+    printf("\n------ Delivery List ------\n");
+    for (int i = 0; i < deliveryCount; i++) {
+        printf("ID: %d | From: %s -> To: %s | Vehicle: %s | Distance: %d km | Status: %s\n",deliveries[i].id, deliveries[i].source, deliveries[i].destination,deliveries[i].vehicle, deliveries[i].distance, deliveries[i].status);
+
+    }
+
+    printf("----------------------------\n");
+
 }
 
 
